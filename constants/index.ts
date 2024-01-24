@@ -7,6 +7,6 @@ let _proxyBaseURL = 'https://worker.powerfulyang.com'
 
 // eslint-disable-next-line node/prefer-global/process
 if (process.env.API_ENV === 'local')
-  _proxyBaseURL = 'http://localhost:8787'
+  _proxyBaseURL = 'http://localhost:3001'
 
 export const proxyBaseURL = _proxyBaseURL

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import { ref } from 'vue'
-import { useGetApiEventLog, useGetApiEventLogDistinct } from '~/schemas/services/myAPI'
+import { useQueryDistinctEventLog, useQueryEventLog } from '~/schemas/services/backendAPI'
 
 function initDates() {
   return Array.from({ length: 14 }, (_, i) => {
@@ -26,7 +26,7 @@ function mount(date?: string) {
 mount(formatDatetime(new Date(), 'YYYY-MM-DD'))
 
 // name list
-const { data: tags, isPending: isFetchingTags, refetch: refetchTags, suspense: suspenseTags } = useGetApiEventLogDistinct(
+const { data: tags, isPending: isFetchingTags, refetch: refetchTags, suspense: suspenseTags } = useQueryDistinctEventLog(
   computed(() => {
     return {
       date: activeDate.value,
@@ -34,7 +34,7 @@ const { data: tags, isPending: isFetchingTags, refetch: refetchTags, suspense: s
   }),
 )
 
-const { data: logs, isPending: isFetchingLogs, refetch: refetchLogs, suspense: suspenseLogs } = useGetApiEventLog(
+const { data: logs, isPending: isFetchingLogs, refetch: refetchLogs, suspense: suspenseLogs } = useQueryEventLog(
   computed(() => {
     return {
       eventName: activeEvent.value,

@@ -17,7 +17,7 @@ const config = defineConfig({
       },
     },
     input: {
-      target: `${proxyBaseURL}/api/doc`,
+      target: `${proxyBaseURL}/api/swagger-json`,
     },
   },
 })
