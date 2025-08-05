@@ -1,50 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo } from "react";
 
 import { api } from "@/trpc/react";
 
-export function LatestPost() {
-  const [latestPost] = api.post.getLatest.useSuspenseQuery();
+export function PostList() {
+  const [data] = api.post.list.useSuspenseQuery({ limit: 50 });
+  const posts = useMemo(() => {
+    return data ?? [];
+  }, [data]);
 
-  const utils = api.useUtils();
-  const [name, setName] = useState("");
-  const createPost = api.post.create.useMutation({
-    onSuccess: async () => {
-      await utils.post.invalidate();
-      setName("");
-    },
-  });
+  const formatted = useMemo(
+    () =>
+      posts.map((p) => ({
+        id: p.id,
+        title: p.name,
+        date: new Date(p.createdAt).toLocaleDateString(),
+      })),
+    [posts],
+  );
 
   return (
-    <div className="w-full max-w-xs">
-      {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.name}</p>
-      ) : (
-        <p>You have no posts yet.</p>
-      )}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          createPost.mutate({ name });
-        }}
-        className="flex flex-col gap-2"
-      >
-        <input
-          type="text"
-          placeholder="Title"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-full bg-white/10 px-4 py-2 text-white"
-        />
-        <button
-          type="submit"
-          className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
-          disabled={createPost.isPending}
+    <div className="grid w-full gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {formatted.map((post) => (
+        <article
+          key={post.id}
+          className="group relative overflow-hidden rounded-2xl border bg-white/60 p-5 shadow-sm backdrop-blur transition-all hover:shadow-md dark:border-white/10 dark:bg-white/5"
         >
-          {createPost.isPending ? "Submitting..." : "Submit"}
-        </button>
-      </form>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/5 opacity-0 transition-opacity group-hover:opacity-100 dark:to-white/5" />
+          <h3 className="text-lg font-semibold tracking-tight">{post.title}</h3>
+          <p className="text-muted-foreground mt-2 text-sm">{post.date}</p>
+        </article>
+      ))}
+      {formatted.length === 0 && (
+        <div className="text-muted-foreground col-span-full rounded-xl border p-8 text-center text-sm dark:border-white/10">
+          No posts yet.
+        </div>
+      )}
     </div>
   );
 }

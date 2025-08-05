@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 
 import { type Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { ThemeProvider } from "./_components/theme-provider";
@@ -14,32 +14,41 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-const geist = Geist({
+const geistSans = Geist({
   subsets: ["latin"],
   variable: "--font-geist-sans",
+});
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
 });
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${geist.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable}`}
+    >
       <body>
         <ThemeProvider defaultTheme="system">
-          <div className="flex min-h-screen flex-col">
-            <header>
-              <div className="container mx-auto flex h-16 items-center justify-between px-4">
-                <div className="text-xl font-bold">Little Eleven</div>
+          <div className="relative flex min-h-screen flex-col">
+            <header className="sticky top-0 z-20 border-b bg-[var(--vp-c-bg)]/70 backdrop-blur supports-[backdrop-filter]:bg-[var(--vp-c-bg)]/60 dark:border-white/10">
+              <div className="container mx-auto flex h-14 items-center justify-between px-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-7 w-7 rounded bg-gradient-to-br from-pink-500 via-violet-500 to-sky-500" />
+                  <div className="text-base font-semibold tracking-tight">Little Eleven</div>
+                </div>
                 <ThemeToggle />
               </div>
             </header>
-            <main className="container mx-auto flex-1 px-4 py-8">
+            <main className="container relative mx-auto flex-1 px-4 py-8">
               <TRPCReactProvider>{children}</TRPCReactProvider>
             </main>
-            <footer className="bg-background border-t">
-              <div className="container mx-auto px-4 py-6 text-center text-sm">
-                © {new Date().getFullYear()} Little Eleven. All rights reserved.
-              </div>
+            <footer className="z-10 border-t bg-[var(--vp-c-bg)]/70 py-6 text-center text-sm backdrop-blur supports-[backdrop-filter]:bg-[var(--vp-c-bg)]/60 dark:border-white/10">
+              © {new Date().getFullYear()} Little Eleven. All rights reserved.
             </footer>
           </div>
         </ThemeProvider>

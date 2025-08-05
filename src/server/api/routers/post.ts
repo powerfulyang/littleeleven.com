@@ -21,6 +21,26 @@ export const postRouter = createTRPCRouter({
       });
     }),
 
+  /**
+   * List posts ordered by newest first
+   */
+  list: publicProcedure
+    .input(
+      z
+        .object({
+          limit: z.number().min(1).max(100).optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = input?.limit ?? 20;
+      
+      return await ctx.db.post.findMany({
+        take: limit,
+        orderBy: { createdAt: "desc" },
+      });
+    }),
+
   getLatest: publicProcedure.query(async ({ ctx }) => {
     const post = await ctx.db.post.findFirst({
       orderBy: { createdAt: "desc" },
