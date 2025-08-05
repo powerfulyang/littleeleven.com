@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+/* View transitions for dark mode toggle */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-old(root) {
+    z-index: 1;
+  }
+  
+  ::view-transition-new(root) {
+    z-index: 9999;
+  }
+  
+  .dark::view-transition-old(root) {
+    z-index: 9999;
+  }
+  
+  .dark::view-transition-new(root) {
+    z-index: 1;
+  }
+}
+
+:root {
+    --vp-c-bg: #ffffff;
+    --vp-c-text-1: #3c3c43;
+}
+
+.dark {
+    --vp-c-bg: #1b1b1f;
+    --vp-c-text-1: #dfdfd6;
+}
+
+body {
+    margin: 0;
+    width: 100%;
+    min-width: 320px;
+    min-height: 100vh;
+    line-height: 24px;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--vp-c-text-1);
+    background-color: var(--vp-c-bg);
+    font-synthesis: style;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale
+}
+
+
